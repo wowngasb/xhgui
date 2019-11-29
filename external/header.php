@@ -179,8 +179,10 @@ register_shutdown_function(
 
         if (!empty($data['profile']) && !empty($_SERVER['SCRIPT_FILENAME'])) {
             $save_dir = dirname(dirname($_SERVER['SCRIPT_FILENAME'])) . '/xhprof';
-            $xhprof_runs = new XHprofRuns_Default($save_dir);
-            $xhprof_runs->save_run($data['profile'], "{$use_time}_{$simple_url}");
+            if(is_dir($save_dir)){
+                $xhprof_runs = new XHprofRuns_Default($save_dir);
+                $xhprof_runs->save_run($data['profile'], "{$use_time}_{$simple_url}");
+            }
         }
 
         try {
