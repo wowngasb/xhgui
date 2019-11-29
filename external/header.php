@@ -56,6 +56,8 @@
 
 // return ;
 
+define('DEBUG_START_MICRO_TIMESTAMP', microtime(true));
+
 // this file should not - under no circumstances - interfere with any other application
 if (!extension_loaded('xhprof') && !extension_loaded('uprofiler') && !extension_loaded('tideways')) {
     error_log('xhgui - either extension xhprof, uprofiler or tideways must be loaded');
@@ -69,6 +71,10 @@ if (!extension_loaded('xhprof') && !extension_loaded('uprofiler') && !extension_
 // autoloaders.
 $dir = dirname(__DIR__);
 require_once $dir . '/src/Xhgui/Config.php';
+
+include_once $dir . "/xhprof_lib/utils/xhprof_lib.php";
+include_once $dir . "/xhprof_lib/utils/xhprof_runs.php";
+
 Xhgui_Config::load($dir . '/config/config.default.php');
 if (file_exists($dir . '/config/config.php')) {
     Xhgui_Config::load($dir . '/config/config.php');
@@ -111,6 +117,8 @@ if ($extension == 'uprofiler' && extension_loaded('uprofiler')) {
 
 register_shutdown_function(
     function () {
+        $use_time = round(microtime(true) - DEBUG_START_MICRO_TIMESTAMP, 3) * 1000;
+
         $extension = Xhgui_Config::read('extension');
         if ($extension == 'uprofiler' && extension_loaded('uprofiler')) {
             $data['profile'] = uprofiler_disable();
@@ -155,16 +163,25 @@ register_shutdown_function(
             $requestTsMicro = new MongoDate($requestTimeFloat[0], $requestTimeFloat[1]);
         }
 
+        $simple_url = Xhgui_Util::simpleUrl($uri);
+        $simple_url = strlen($simple_url) > 64 ? explode('?', $simple_url, 2)[0] : $simple_url;
+
         $data['meta'] = array(
             'url' => $uri,
             'SERVER' => $_SERVER,
             'get' => $_GET,
             'env' => $_ENV,
-            'simple_url' => Xhgui_Util::simpleUrl($uri),
+            'simple_url' => $simple_url,
             'request_ts' => $requestTs,
             'request_ts_micro' => $requestTsMicro,
             'request_date' => date('Y-m-d', $time),
         );
+
+        if (!empty($data['profile']) && !empty($_SERVER['SCRIPT_FILENAME'])) {
+            $save_dir = dirname(dirname($_SERVER['SCRIPT_FILENAME'])) . '/xhprof';
+            $xhprof_runs = new XHprofRuns_Default($save_dir);
+            $xhprof_runs->save_run($data['profile'], "{$use_time}_{$simple_url}");
+        }
 
         try {
             $config = Xhgui_Config::all();
