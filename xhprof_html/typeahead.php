@@ -27,6 +27,8 @@ $GLOBALS['XHPROF_LIB_ROOT'] = dirname(__FILE__) . '/../xhprof_lib';
 
 require_once $GLOBALS['XHPROF_LIB_ROOT'].'/display/xhprof.php';
 
-$xhprof_runs_impl = new XHProfRuns_Default();
+$path = !empty($_REQUEST['path']) ? trim($_REQUEST['path']) : '/usr/local/nginx/yichat/backend/xhprof';
+
+$xhprof_runs_impl = new XHProfRuns_Default($path);
 
 require_once $GLOBALS['XHPROF_LIB_ROOT'].'/display/typeahead_common.php';

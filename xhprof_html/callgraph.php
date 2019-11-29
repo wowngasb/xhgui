@@ -78,7 +78,9 @@ if (!array_key_exists($type, $xhprof_legal_image_types)) {
   $type = $params['type'][1]; // default image type.
 }
 
-$xhprof_runs_impl = new XHProfRuns_Default();
+$path = !empty($_REQUEST['path']) ? trim($_REQUEST['path']) : '/usr/local/nginx/yichat/backend/xhprof';
+
+$xhprof_runs_impl = new XHProfRuns_Default($path);
 
 if (!empty($run)) {
   // single run call graph image generation
