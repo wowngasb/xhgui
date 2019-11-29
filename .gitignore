@@ -6,3 +6,4 @@ config/config.php
 nohup.out
 
 .git_bak/
+.idea/
