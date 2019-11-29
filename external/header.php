@@ -55,7 +55,13 @@
  */
 $host = !empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost';
 
-if ($host == 'localhost' || substr($host, 0, 6) == 'xhgui.' || substr($host, 0, 5) == 'test-') {
+$uri = !empty($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null;
+if (empty($uri) && isset($_SERVER['argv'])) {
+    $cmd = basename($_SERVER['argv'][0]);
+    $uri = $cmd . ' ' . implode(' ', array_slice($_SERVER['argv'], 1));
+}
+
+if ($uri == '/' && $host == 'localhost' || substr($host, 0, 6) == 'xhgui.' || substr($host, 0, 5) == 'test-') {
     return;
 }
 // return ;
@@ -88,12 +94,6 @@ unset($dir);
 if ((!extension_loaded('mongo') && !extension_loaded('mongodb')) && Xhgui_Config::read('save.handler') === 'mongodb') {
     error_log('xhgui - extension mongo not loaded');
     return;
-}
-
-$uri = !empty($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null;
-if (empty($uri) && isset($_SERVER['argv'])) {
-    $cmd = basename($_SERVER['argv'][0]);
-    $uri = $cmd . ' ' . implode(' ', array_slice($_SERVER['argv'], 1));
 }
 
 if (!Xhgui_Config::shouldRun($host, $uri)) {
