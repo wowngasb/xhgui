@@ -73,13 +73,13 @@ class Xhgui_Config
      *
      * @return boolean
      */
-    public static function shouldRun($uri)
+    public static function shouldRun($host, $uri)
     {
         $callback = self::read('profiler.enable');
         if (!is_callable($callback)) {
             return false;
         }
-        return (bool)$callback($uri);
+        return (bool)$callback($host, $uri);
     }
 
 }

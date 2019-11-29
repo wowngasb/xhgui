@@ -92,7 +92,8 @@ if (empty($uri) && isset($_SERVER['argv'])) {
     $uri = $cmd . ' ' . implode(' ', array_slice($_SERVER['argv'], 1));
 }
 
-if (!Xhgui_Config::shouldRun($uri)) {
+$host = !empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost';
+if (!Xhgui_Config::shouldRun($host, $uri)) {
     return;
 }
 
@@ -179,7 +180,7 @@ register_shutdown_function(
 
         if (!empty($data['profile']) && !empty($_SERVER['SCRIPT_FILENAME'])) {
             $save_dir = dirname(dirname($_SERVER['SCRIPT_FILENAME'])) . '/xhprof';
-            if(is_dir($save_dir)){
+            if (is_dir($save_dir)) {
                 $xhprof_runs = new XHprofRuns_Default($save_dir);
                 $simple_url = explode('?', $simple_url, 2)[0];
                 $simple_url = explode('&', $simple_url, 2)[0];
