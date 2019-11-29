@@ -181,7 +181,11 @@ register_shutdown_function(
             $save_dir = dirname(dirname($_SERVER['SCRIPT_FILENAME'])) . '/xhprof';
             if(is_dir($save_dir)){
                 $xhprof_runs = new XHprofRuns_Default($save_dir);
+                $simple_url = explode('?', $simple_url, 2)[0];
+                $simple_url = explode('&', $simple_url, 2)[0];
+                $simple_url = explode('#', $simple_url, 2)[0];
                 $simple_url = str_replace("/", "_", $simple_url);
+                $simple_url = str_replace(":", "_", $simple_url);
                 $xhprof_runs->save_run($data['profile'], "{$use_time}_{$simple_url}");
             }
         }
