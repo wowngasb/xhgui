@@ -80,9 +80,7 @@ if ((!extension_loaded('mongo') && !extension_loaded('mongodb')) && Xhgui_Config
     return;
 }
 
-$uri = array_key_exists('REQUEST_URI', $_SERVER)
-    ? $_SERVER['REQUEST_URI']
-    : null;
+$uri = !empty($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null;
 if (empty($uri) && isset($_SERVER['argv'])) {
     $cmd = basename($_SERVER['argv'][0]);
     $uri = $cmd . ' ' . implode(' ', array_slice($_SERVER['argv'], 1));
