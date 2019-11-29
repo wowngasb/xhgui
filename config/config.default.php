@@ -2,9 +2,9 @@
 /**
  * Default configuration for Xhgui
  */
-        ini_set('display_errors', 0);
-        ini_set('log_errors', 1);
-        date_default_timezone_set('Asia/Shanghai');
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+date_default_timezone_set('Asia/Shanghai');
 
 return array(
     'debug' => false,
@@ -38,11 +38,11 @@ return array(
 
     // Profile 1 in 100 requests.
     // You can return true to profile every request.
-    'profiler.enable' => function($uri) {
-        return true;//rand(1, 100) === 42;
+    'profiler.enable' => function ($uri) {
+        return substr($uri, 0, 6) != 'xhgui.' && rand(1, 56) === 42;
     },
 
-    'profiler.simple_url' => function($url) {
+    'profiler.simple_url' => function ($url) {
         return preg_replace('/\=\d+/', '', $url);
     }
 
