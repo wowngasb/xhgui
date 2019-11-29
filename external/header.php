@@ -80,7 +80,15 @@ if ((!extension_loaded('mongo') && !extension_loaded('mongodb')) && Xhgui_Config
     return;
 }
 
-if (!Xhgui_Config::shouldRun()) {
+$uri = array_key_exists('REQUEST_URI', $_SERVER)
+    ? $_SERVER['REQUEST_URI']
+    : null;
+if (empty($uri) && isset($_SERVER['argv'])) {
+    $cmd = basename($_SERVER['argv'][0]);
+    $uri = $cmd . ' ' . implode(' ', array_slice($_SERVER['argv'], 1));
+}
+
+if (!Xhgui_Config::shouldRun($uri)) {
     return;
 }
 
@@ -126,7 +134,6 @@ register_shutdown_function(
         if (!defined('XHGUI_ROOT_DIR')) {
             require dirname(dirname(__FILE__)) . '/src/bootstrap.php';
         }
-
         $uri = array_key_exists('REQUEST_URI', $_SERVER)
             ? $_SERVER['REQUEST_URI']
             : null;
@@ -134,7 +141,6 @@ register_shutdown_function(
             $cmd = basename($_SERVER['argv'][0]);
             $uri = $cmd . ' ' . implode(' ', array_slice($_SERVER['argv'], 1));
         }
-
         $time = array_key_exists('REQUEST_TIME', $_SERVER)
             ? $_SERVER['REQUEST_TIME']
             : time();
