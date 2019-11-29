@@ -53,7 +53,11 @@
  * mode when using XHGui, because it only supports callgraphs and we can save the overhead. Use
  * TIDEWAYS_FLAGS_NO_SPANS to disable timeline mode.
  */
+$host = !empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost';
 
+if ($host == 'localhost' || substr($host, 0, 6) == 'xhgui.' || substr($host, 0, 5) == 'test-') {
+    return;
+}
 // return ;
 
 define('DEBUG_START_MICRO_TIMESTAMP', microtime(true));
@@ -92,7 +96,6 @@ if (empty($uri) && isset($_SERVER['argv'])) {
     $uri = $cmd . ' ' . implode(' ', array_slice($_SERVER['argv'], 1));
 }
 
-$host = !empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost';
 if (!Xhgui_Config::shouldRun($host, $uri)) {
     return;
 }

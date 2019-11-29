@@ -39,7 +39,7 @@ return array(
     // Profile 1 in 100 requests.
     // You can return true to profile every request.
     'profiler.enable' => function ($host, $uri) {
-        return substr($host, 0, 6) != 'xhgui.' && substr($host, 0, 5) != 'test-' && rand(1, 56) === 42;
+        return rand(0, 100) === 42;
     },
 
     'profiler.simple_url' => function ($url) {
