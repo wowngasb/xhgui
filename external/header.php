@@ -188,7 +188,7 @@ register_shutdown_function(
                 $simple_url = str_replace("/", "_", $simple_url);
                 $simple_url = str_replace(":", "_", $simple_url);
                 $simple_url = str_replace(".", "_", $simple_url);
-                $xhprof_runs->save_run($data['profile'], "{$use_time}_{$simple_url}");
+                $xhprof_runs->save_run($data['profile'], "{$use_time}ms_{$simple_url}");
             }
         }
 
