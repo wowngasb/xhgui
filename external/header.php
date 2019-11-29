@@ -61,7 +61,7 @@ if (empty($uri) && isset($_SERVER['argv'])) {
     $uri = $cmd . ' ' . implode(' ', array_slice($_SERVER['argv'], 1));
 }
 
-if ($uri == '/' && $host == 'localhost' || substr($host, 0, 6) == 'xhgui.' || substr($host, 0, 5) == 'test-') {
+if ($uri == '/' || $host == 'localhost' || substr($host, 0, 6) == 'xhgui.' || substr($host, 0, 5) == 'test-') {
     return;
 }
 // return ;
